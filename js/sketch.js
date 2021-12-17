@@ -8,18 +8,36 @@ let phase = 0;
 let zoff = 0;
 //let slider;
 
+//ccapture
+// const T = 1;
+// const NUM_FRAMES = 200;
+// var capture = false; // default is to not capture frames, can be changed with button in browser
+var capturer = new CCapture({
+  format:'webm', 
+  framerate: 60
+});
+var btn1;
+
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(1920, 1080);
   colorMode(HSB, 360, 100, 100, 100);
   // slider = createSlider(0, 10, 3, 0.1);
   background(255);
+
+  //CCapture
+  btn1 = document.createElement('button');
+  btn1.textContent = "save recording";
+  document.body.appendChild(btn1);
+  btn1.onclick = save_record;
 }
 
 function draw() {
   // background(255, 0.5);
-  scale(1.75);
+  if (frameCount==1) capturer.start(); // start the animation capture
+  print(frameCount);
+  scale(1.5);
   translate(width / 2, height / 2);
-  stroke(random(0, 50), random(100), random(100), random(50, 100));
+  stroke(random(175, 250), 100, random(100), random(50, 100));
   strokeWeight(random(10));
   noFill();
   beginShape();
@@ -35,4 +53,13 @@ function draw() {
   endShape(CLOSE);
   phase += 0.003;
   zoff += 0.01;
+
+  capturer.capture(document.getElementById('defaultCanvas0')); 
+  if (frameCount==2400){
+    save_record();
+  }
+}
+
+function save_record() {
+  capturer.save();
 }
